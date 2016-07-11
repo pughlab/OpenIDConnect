@@ -9,7 +9,9 @@ var crypto = require('crypto'),
     http = require('http'),
     path = require('path'),
     querystring = require('querystring'),
-    rs = require('connect-redis')(expressSession),
+    // rs = require('connect-redis')(expressSession),
+    knex = require('knex'),
+    connectSessionKnex = require('connect-session-knex'),
     extend = require('extend'),
     test = {
         status: 'new'
@@ -42,8 +44,18 @@ app.use(logger('dev'));
 app.use(bodyParser());
 app.use(methodOverride());
 app.use(cookieParser('Some Secret!!!'));
-app.use(expressSession({store: new rs({host: '127.0.0.1', port: 6379}), secret: 'Some Secret!!!'}));
+// app.use(expressSession({store: new rs({host: '127.0.0.1', port: 6379}), secret: 'Some Secret!!!'}));
 // app.use(app.router);
+
+var databaseOptions = {};
+databaseOptions.client = 'sqlite3';
+databaseOptions.connection = {filename: './dev.sqlite3'};
+var database = knex(databaseOptions);
+
+var sessionOptions = {};
+var SessionStore = connectSessionKnex(expressSession, {transactional: true});
+sessionOptions.store = new SessionStore({tablename: 'sessions', knex: database});
+app.use(expressSession(sessionOptions));
 
 //redirect to login
 app.get('/', function(req, res) {
