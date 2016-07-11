@@ -31,7 +31,8 @@
     "lodash": "^3.10.1",
     "modelling": "0.0.3",
     "q": "^1.4.1",
-    "sails-redis": "^0.10.5"
+    "sails-redis": "^0.10.5",
+    "waterline-sqlite3": "^1.0.3"
   },
   "directories": {
     "example": "./examples"
