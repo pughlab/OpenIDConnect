@@ -12,6 +12,7 @@ querystring = require('querystring'),
 //hashlib = require('hashlib2'),
 modelling = require('modelling'),
 sailsRedis = require('sails-redis'),
+waterlineSqlite3 = require('waterline-sqlite3'),
 crypto = require('crypto'),
 _ = require('lodash'),
 extend = require('extend'),
@@ -46,11 +47,13 @@ var defaults = {
             },
         },
         adapters: {
-            redis: sailsRedis
+            sqlite3: waterlineSqlite3
         },
         connections: {
             def: {
-                adapter: 'redis'
+                adapter: 'sqlite3',
+                filename: './dev.sqlite3',
+                debug: true
             }
         },
         models: {
