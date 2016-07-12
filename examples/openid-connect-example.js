@@ -35,8 +35,12 @@ var options = {
   models:{user:{attributes:{sub:function(){return this.email;}}}},
   app: app
 };
+
 var oidc = require('../index').oidc(options);
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 // all environments
 app.set('port', process.env.PORT || 3001);
