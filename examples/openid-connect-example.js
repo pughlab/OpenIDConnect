@@ -6,6 +6,7 @@
 var crypto = require('crypto'),
     express = require('express'),
     expressSession = require('express-session'),
+    expressValidator = require('express-validator'),
     http = require('http'),
     path = require('path'),
     querystring = require('querystring'),
@@ -21,6 +22,7 @@ var crypto = require('crypto'),
     cookieParser = require('cookie-parser'),
     errorHandler = require('errorhandler'),
     methodOverride = require('method-override');
+
 
 var app = express();
 
@@ -60,6 +62,25 @@ var sessionOptions = {};
 var SessionStore = connectSessionKnex(expressSession, {transactional: true});
 sessionOptions.store = new SessionStore({tablename: 'sessions', knex: database});
 app.use(expressSession(sessionOptions));
+
+// Express Validator 
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+ 
 
 //redirect to login
 app.get('/', function(req, res) {
