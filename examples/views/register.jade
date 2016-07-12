@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+  h1 Register!
+  form(method="post" action="/register")
+    input(type="text" class="form-control" placeholder="First Name" name="first" maxlength="50")
+    input(type="text" class="form-control" placeholder="Last Name" name="last" maxlength="50")
+    input(type="text" class="form-control" placeholder="Email" name="email" maxlength="25")
+    input(type="password" class="form-control" placeholder="Password" name="password")
+    input(type="password" class="form-control" placeholder="Confirm Password" name="password2")
+    button(type="submit") Register
+  if errors
+    each err in errors
+      p #{err}
