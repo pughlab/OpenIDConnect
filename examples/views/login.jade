@@ -1,0 +1,8 @@
+extends layout 
+
+block content 
+  h1 Login!
+  form(method="post" action="/login")
+    input(type="text" name="email" placeholder="Enter Email") 
+    input(type="password" name="password" placeholder="Enter Password")
+    button(type="submit") Login
