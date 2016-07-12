@@ -59,7 +59,6 @@ var defaults = {
                 user: {
                     identity: 'user',
                     connection: 'def',
-                    migrate: 'safe',
                     schema: true,
                     policies: 'loggedIn',
                     attributes: {
@@ -106,7 +105,6 @@ var defaults = {
                 client: {
                     identity: 'client',
                     connection: 'def',
-                    migrate: 'safe',
                     schema: true,
                     policies: 'loggedIn',
                     attributes: {
@@ -138,7 +136,6 @@ var defaults = {
                 consent: {
                     identity: 'consent',
                     connection: 'def',
-                    migrate: 'safe',
                     policies: 'loggedIn',
                     attributes: {
                         user: {model: 'user', required: true},
@@ -149,7 +146,6 @@ var defaults = {
                 auth: {
                     identity: 'auth',
                     connection: 'def',
-                    migrate: 'safe',
                     policies: 'loggedIn',
                     attributes: {
                         client: {model: 'client',   required: true},
@@ -173,7 +169,6 @@ var defaults = {
                 access: {
                     identity: 'access',
                     connection: 'def',
-                    migrate: 'safe',
                     attributes: {
                         token: {type: 'string', required: true},
                         type: {type: 'string', required: true},
@@ -188,7 +183,6 @@ var defaults = {
                 refresh: {
                     identity: 'refresh',
                     connection: 'def',
-                    migrate: 'safe',
                     attributes: {
                         token: {type: 'string', required: true},
                         scope: {type: 'array', required: true},
