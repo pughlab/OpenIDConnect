@@ -10,5 +10,5 @@ block content
     input(type="password" class="form-control" placeholder="Confirm Password" name="password2")
     button(type="submit") Register
   if errors
-    each err in errors
-      p #{err}
+    each error in errors
+      p #{error.msg}

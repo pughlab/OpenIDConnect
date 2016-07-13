@@ -13,30 +13,35 @@ router.get('/', function(req, res, next) {
 //process user creation
 router.post('/', oidc.use({policies: {loggedIn: false}, models: 'user'}), function(req, res, next) {
   delete req.session.error;
-  req.model.user.findOne({email: req.body.email}, function(err, user) {
-      if(err) {
-          req.session.error=err;
-          console.log(req.session.error); 
-      } else if(user) {
-          req.session.error='User already exists.';
-          console.log(req.session.error); 
-      }
-      if(req.session.error) {
-          res.redirect(req.path);
-      } else {
-          req.body.name = req.body.given_name+' '+(req.body.middle_name?req.body.middle_name+' ':'')+req.body.family_name;
-          req.model.user.create(req.body, function(err, user) {
-             if(err || !user) {
-                 req.session.error=err?err:'User could not be created.';
-                 console.log(req.session.error); 
-                 res.redirect(req.path);
-             } else {
-                 req.session.user = user.id;
-                 res.redirect('/user');
-             }
-          });
-      }
-  });
+
+  var given_name = req.body.given_name;
+  var family_name = req.body.family_name;
+  var email = req.body.email;
+  var password = req.body.password;
+  var password2 = req.body.password2;
+
+  req.checkBody('given_name', 'First name is required').notEmpty(); 
+  req.checkBody('family_name', 'Last name is required').notEmpty(); 
+  req.checkBody('email', 'Email is not valid').isEmail();
+  req.checkBody('password', 'Password is required').notEmpty();
+  req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
+
+  var errors = req.validationErrors(); 
+
+  if (errors) {
+    res.render('register', {
+      errors: errors
+    });
+  } else {
+    req.model.user.create(req.body, function (err, user) {
+      if (err) throw err; 
+      console.log(user); 
+
+      // Add flash message here? 
+      req.session.user = user.id; 
+      res.redirect('/user');
+    });
+  }
 });
 
 module.exports = router; 
