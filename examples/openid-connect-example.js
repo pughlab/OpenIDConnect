@@ -8,7 +8,6 @@ var express = require('express'),
     expressValidator = require('express-validator'),
     http = require('http'),
     path = require('path'),
-    querystring = require('querystring'),
     knex = require('knex'),
     connectSessionKnex = require('connect-session-knex'),
     logger = require('morgan'),
@@ -17,7 +16,7 @@ var express = require('express'),
     errorHandler = require('errorhandler'),
     methodOverride = require('method-override');
 
-var userRoute = require('./routes/user'); 
+var user = require('./routes/user'); 
 var register = require('./routes/register'); 
 var client = require('./routes/client'); 
 var login = require('./routes/login'); 
@@ -66,7 +65,7 @@ app.use(expressValidator({
 }));
 
 // Routes 
-app.use('/user', userRoute);
+app.use('/user', user);
 app.use('/login', login);
 app.use('/register', register); 
 app.use('/client', client);
