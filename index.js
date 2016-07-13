@@ -62,7 +62,7 @@ var defaults = {
                     schema: true,
                     policies: 'loggedIn',
                     attributes: {
-                        name: {type: 'string', required: true, unique: true},
+                        name: {type: 'string'/*, required: true, unique: true*/},
                         given_name: {type: 'string', required: true},
                         middle_name: 'string',
                         family_name: {type: 'string', required: true},
@@ -81,7 +81,7 @@ var defaults = {
                     },
                     beforeCreate: function(values, next) {
                         if(values.password) {
-                            if(values.password != values.passConfirm) {
+                            if(values.password != values.password2) {
                                 return next("Password and confirmation does not match");
                             }
                             var sha256 = crypto.createHash('sha256');
@@ -92,7 +92,7 @@ var defaults = {
                     },
                     beforeUpdate: function(values, next) {
                         if(values.password) {
-                            if(values.password != values.passConfirm) {
+                            if(values.password != values.password2) {
                                 return next("Password and confirmation does not match");
                             }
                             var sha256 = crypto.createHash('sha256');
