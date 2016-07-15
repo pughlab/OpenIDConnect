@@ -72,15 +72,12 @@ var defaults = {
                         birthdate: 'date',
                         gender: 'string',
                         phone_number: 'string',
-                        // samePassword is used in login.js (validateUser)
-                        samePassword: function(clearText) {
-                            console.log("Same Password");
-                            var sha256 = crypto.createHash('sha256');
-                            sha256.update(clearText);
-                            return this.password == sha256.digest('hex');
-
-
-                        }, 
+                        comparePassword: function (candidatePassword, hash, callback) {
+                            bcrypt.compare(candidatePassword, hash, function(err, isMatch){
+                                if (err) throw err; 
+                                callback(null, isMatch); 
+                            });
+                        } 
                     },
                     // Used during registration
                     beforeCreate: function(values, next) {
