@@ -81,25 +81,20 @@ var defaults = {
                     },
                     // Used during registration
                     beforeCreate: function(values, next) {
-                        
-                        // Synchronous version 
-                        var hash = bcrypt.hashSync(values.password, 10); 
-                        values.password = hash; 
-
-                        // Asynchronous (hash doesn't get stored properly)
-                        // bcrypt.genSalt(10, function (err, salt) {
-                        //     bcrypt.hash(values.password, salt, function (err, hash) {
-                        //         values.password = hash; 
-                        //     });
-                        // });
-
-                        next();
+                        bcrypt.genSalt(10, function (err, salt) {
+                            bcrypt.hash(values.password, salt, function (err, hash) {
+                                values.password = hash; 
+                                next();
+                            });
+                        });
                     },
                     beforeUpdate: function(values, next) {
-                        var hash = bcrypt.hashSync(values.password, 10); 
-                        values.password = hash;
-
-                        next();
+                        bcrypt.genSalt(10, function (err, salt) {
+                            bcrypt.hash(values.password, salt, function (err, hash) {
+                                values.password = hash; 
+                                next();
+                            });
+                        });
                     }
                 },
                 client: {
