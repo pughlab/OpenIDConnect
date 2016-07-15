@@ -7,21 +7,20 @@
  */
 
 var EventEmitter = require('events').EventEmitter,
-querystring = require('querystring'),
-//serializer = require('serializer'),
-//hashlib = require('hashlib2'),
-modelling = require('modelling'),
-// sailsRedis = require('sails-redis'),
-waterlineSqlite3 = require('waterline-sqlite3'),
-crypto = require('crypto'),
-_ = require('lodash'),
-extend = require('extend'),
-url = require('url'),
-Q = require('q'),
-jwt = require('jwt-simple'),
-util = require("util"),
-base64url = require('base64url'),
-cleanObj = require('clean-obj');
+    querystring = require('querystring'),
+    modelling = require('modelling'),
+    // sailsRedis = require('sails-redis'),
+    waterlineSqlite3 = require('waterline-sqlite3'),
+    crypto = require('crypto'),
+    _ = require('lodash'),
+    extend = require('extend'),
+    url = require('url'),
+    Q = require('q'),
+    jwt = require('jwt-simple'),
+    util = require("util"),
+    base64url = require('base64url'),
+    cleanObj = require('clean-obj'),
+    bcrypt = require('bcryptjs');
 
 
 var defaults = {
@@ -73,33 +72,29 @@ var defaults = {
                         birthdate: 'date',
                         gender: 'string',
                         phone_number: 'string',
-                        samePassword: function(clearText) {
-                            var sha256 = crypto.createHash('sha256');
-                            sha256.update(clearText);
-                            return this.password == sha256.digest('hex');
-                        }
+                        comparePassword: function (candidatePassword, hash, callback) {
+                            bcrypt.compare(candidatePassword, hash, function(err, isMatch){
+                                if (err) throw err; 
+                                callback(null, isMatch); 
+                            });
+                        } 
                     },
+                    // Used during registration
                     beforeCreate: function(values, next) {
-                        if(values.password) {
-                            if(values.password != values.password2) {
-                                return next("Password and confirmation does not match");
-                            }
-                            var sha256 = crypto.createHash('sha256');
-                            sha256.update(values.password);
-                            values.password = sha256.digest('hex');
-                        }
-                        next();
+                        bcrypt.genSalt(10, function (err, salt) {
+                            bcrypt.hash(values.password, salt, function (err, hash) {
+                                values.password = hash; 
+                                next();
+                            });
+                        });
                     },
                     beforeUpdate: function(values, next) {
-                        if(values.password) {
-                            if(values.password != values.password2) {
-                                return next("Password and confirmation does not match");
-                            }
-                            var sha256 = crypto.createHash('sha256');
-                            sha256.update(values.password);
-                            values.password = sha256.digest('hex');
-                        }
-                        next();
+                        bcrypt.genSalt(10, function (err, salt) {
+                            bcrypt.hash(values.password, salt, function (err, hash) {
+                                values.password = hash; 
+                                next();
+                            });
+                        });
                     }
                 },
                 client: {

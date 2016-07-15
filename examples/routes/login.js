@@ -10,12 +10,19 @@ router.get('/', function(req, res, next) {
 var validateUser = function (req, next) {
   delete req.session.error;
   req.model.user.findOne({email: req.body.email}, function(err, user) {
-      if(!err && user && user.samePassword(req.body.password)) {
+    if (err) throw err; 
+    if (!user) {
+      return next(null, false, {message: "Check email/password and try again."}); 
+    }
+
+    user.comparePassword(req.body.password, user.password, function(err, isMatch) {
+      if (err) throw err; 
+      if (isMatch) {
         return next(null, user);
       } else {
-        var error = new Error('Username or password incorrect.');
-        return next(error);
+        return next(null, false, {message: "Check email/password and try again."});
       }
+    });
   });
 };
 

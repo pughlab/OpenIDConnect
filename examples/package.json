@@ -6,6 +6,7 @@
     "start": "node openid-connect-example.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.14.1",
     "connect-redis": "^2.5.1",
     "connect-session-knex": "^1.0.23",
