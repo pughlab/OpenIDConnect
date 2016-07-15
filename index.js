@@ -78,14 +78,15 @@ var defaults = {
                             var sha256 = crypto.createHash('sha256');
                             sha256.update(clearText);
                             return this.password == sha256.digest('hex');
+
+
                         }, 
                     },
                     // Used during registration
                     beforeCreate: function(values, next) {
                         
                         // Synchronous version 
-                        var salt = bcrypt.genSaltSync(10); 
-                        var hash = bcrypt.hashSync("B4c0/\/", salt);
+                        var hash = bcrypt.hashSync(values.password, 10); 
                         values.password = hash; 
 
                         // Asynchronous (hash doesn't get stored properly)
@@ -98,8 +99,7 @@ var defaults = {
                         next();
                     },
                     beforeUpdate: function(values, next) {
-                        var salt = bcrypt.genSaltSync(10); 
-                        var hash = bcrypt.hashSync("B4c0/\/", salt);
+                        var hash = bcrypt.hashSync(values.password, 10); 
                         values.password = hash;
 
                         next();
